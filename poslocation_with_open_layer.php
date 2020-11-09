@@ -226,7 +226,7 @@
     function tupleMouseOver(tupleId) {
       $("#marker-span-"+ tupleId).css('position','absolute');
       $("#marker-span-"+ tupleId).css('left', mouseX);
-      $("#marker-span-"+ tupleId).css('top', mouseY - 10);
+      $("#marker-span-"+ tupleId).css('top', mouseY);
       $("#marker-span-"+ tupleId).tooltip('show');
     }
 
