@@ -99,6 +99,12 @@
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
         <script type = "text/javascript" >
+          $(document).mousemove(function(e) {
+              window.mouseX = e.pageX;
+              window.mouseY = e.pageY;
+          });
+
+
           var map = new ol.Map({
               target: 'map',
               layers: [
@@ -132,11 +138,8 @@
             poses.splice(0, 1);
         }
 
-        console.log(poses_with_lat_long)
+        console.log(poses_with_lat_long);
     }
-
-
-
 
     function setMarkers(map) {
 
@@ -151,7 +154,9 @@
             latlongmap['lng'] = pos['Longitude'];
 
             var element = document.createElement('div');
-            element.innerHTML = '<img id="pointer-'+ pos['S/l'] +'" src="mappin2.png" width="30" height="30" onclick="gotoTableRow(' + pos['S/l'] + ')" />';
+
+            element.innerHTML = 
+            '<img id="pointer-'+ pos['S/l'] +'" src="mappin2.png" width="30" height="30" onclick="gotoTableRow(' + pos['S/l'] + ')" onmouseover="tupleMouseOver(' + pos['S/l'] + ')" onmouseout="tupleMouseOut(' + pos['S/l'] + ')"/>';
 
             var markerCoordinates = ol.proj.fromLonLat([latlongmap['lng'], latlongmap['lat']]);
 
@@ -164,6 +169,16 @@
 
             markers.push(marker);
             map.addOverlay(marker);
+
+
+            var markerSpan = document.createElement("span");
+            markerSpan.setAttribute("id", "marker-span-" + pos['S/l']);
+            markerSpan.setAttribute("data-toggle", "tooltip");
+            markerSpan.setAttribute("class", "span-tooltip");
+            markerSpan.setAttribute("data-placement", "top");
+            markerSpan.setAttribute("data-html", "true");
+            markerSpan.setAttribute("title", pos['Agent Name'] + '&#013;' + pos['Address'] + '&#013;' + pos['Contact No.']) ;
+            $('body').append(markerSpan);
         }
 
 
@@ -193,6 +208,19 @@
        var row = document.getElementById("row-" + rowNo);
        row.style.backgroundColor = "#aaaaaa";
        document.getElementById("row-" + rowNo).scrollIntoView();
+    }
+
+
+    function tupleMouseOver(tupleId) {
+      $("#marker-span-"+ tupleId).css('position','absolute');
+      $("#marker-span-"+ tupleId).css('left', mouseX);
+      $("#marker-span-"+ tupleId).css('top', mouseY);
+      $("#marker-span-"+ tupleId).tooltip('show');
+    }
+
+
+    function tupleMouseOut(tupleId) {
+      $("#marker-span-"+ tupleId).tooltip('hide');
     }
 
 
