@@ -13,88 +13,101 @@
         <link rel="stylesheet" type="text/css" href="poslocation.css">
     </head>
     <body>
-        <div id="map" class="map"></div>
-        <?php
-            //Set your file path here
-            $filePath = 'PosLocation_info_with_location.csv';
-             
-            // define two arrays for storing values
-            $keys = array();
-            $newArray = array();
-             
-            //PHP Function to convert CSV into array
-            function convertCsvToArray($file, $delimiter) { 
-              if (($handle = fopen($file, 'r')) !== FALSE) { 
-                $i = 0; 
-                while (($lineArray = fgetcsv($handle, 4000, $delimiter, '"')) !== FALSE) { 
-                  for ($j = 0; $j < count($lineArray); $j++) { 
-                    $arr[$i][$j] = $lineArray[$j]; 
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-2"></div>
+          <div class="col-md-8">
+            <div id="map" class="map"></div>
+            <?php
+                //Set your file path here
+                $filePath = 'PosLocation_info_with_location.csv';
+                 
+                // define two arrays for storing values
+                $keys = array();
+                $newArray = array();
+                 
+                //PHP Function to convert CSV into array
+                function convertCsvToArray($file, $delimiter) { 
+                  if (($handle = fopen($file, 'r')) !== FALSE) { 
+                    $i = 0; 
+                    while (($lineArray = fgetcsv($handle, 4000, $delimiter, '"')) !== FALSE) { 
+                      for ($j = 0; $j < count($lineArray); $j++) { 
+                        $arr[$i][$j] = $lineArray[$j]; 
+                      } 
+                      $i++; 
+                    } 
+                    fclose($handle); 
                   } 
-                  $i++; 
+                  return $arr; 
                 } 
-                fclose($handle); 
-              } 
-              return $arr; 
-            } 
-            // Call the function convert csv To Array
-            $data = convertCsvToArray($filePath, ',');
-             
-            // Set number of elements (minus 1 because we shift off the first row)
-            $count = count($data) - 1;
-               
-            //First row for label or name
-            $labels = array_shift($data);  
-            foreach ($labels as $label) {
-              $keys[] = $label;
-            }
-             
-            // assign keys value to ids, we add new parameter id here
-            $keys[] = 'id';
-            for ($i = 0; $i < $count; $i++) {
-              $data[$i][] = $i;
-            }
-               
-            // combine both array
-            for ($j = 0; $j < $count; $j++) {
-              $d = array_combine($keys, $data[$j]);
-              $newArray[$j] = $d;
-            }
-             
-            // convert array to json php using the json_encode()
-            $arrayToJson = json_encode($newArray);
-            // print converted csv value to json
-            ;
-            ?>
-        <input hidden="hidden" type="text" name="poslocation-csv-data" id="poslocation-csv-data" value="<?php echo(htmlspecialchars($arrayToJson))?>">
-        <div id="table-div" style="overflow-y: auto;overflow-x: hidden;height: 50vh">
-            <br/>
-            <br/>
-            <input type="text" id="myInput" onkeyup="searchFromTableRow()" placeholder="Search for agent name..." title="Type in a name">
-            <table id="myTable" class="table">
-                <thead class="thead-dark">
-                    <tr>
-                        <th style="width:5%;">SL</th>
-                        <th style="width:20%;">Agent Name</th>
-                        <th style="width:20%;">Owner Name</th>
-                        <th style="width:30%;">Address</th>
-                        <th style="width:15%;">Service Provider</th>
-                        <th style="width:10%;">Contact</th>
-                    </tr>
-                </thead>
-                <?php
-                    for($i=0;$i<sizeof($newArray);$i++){
-                        echo "<tr id='row-".$newArray[$i]['S/l']."'>";
-                        echo "<td>".$newArray[$i]['S/l']."</td>";
-                        echo "<td>".$newArray[$i]['Agent Name']."</td>";
-                        echo "<td>".$newArray[$i]['Owner Name']."</td>";
-                        echo "<td>".$newArray[$i]['Address']."</td>";
-                        echo "<td>".$newArray[$i]['Service Provider']."</td>";
-                        echo "<td>".$newArray[$i]['Contact No.']."</td>";
-                        echo "</tr>";
-                    }
-                    ?>
-            </table>
+                // Call the function convert csv To Array
+                $data = convertCsvToArray($filePath, ',');
+                 
+                // Set number of elements (minus 1 because we shift off the first row)
+                $count = count($data) - 1;
+                   
+                //First row for label or name
+                $labels = array_shift($data);  
+                foreach ($labels as $label) {
+                  $keys[] = $label;
+                }
+                 
+                // assign keys value to ids, we add new parameter id here
+                $keys[] = 'id';
+                for ($i = 0; $i < $count; $i++) {
+                  $data[$i][] = $i;
+                }
+                   
+                // combine both array
+                for ($j = 0; $j < $count; $j++) {
+                  $d = array_combine($keys, $data[$j]);
+                  $newArray[$j] = $d;
+                }
+                 
+                // convert array to json php using the json_encode()
+                $arrayToJson = json_encode($newArray);
+                // print converted csv value to json
+                ;
+                ?>
+            <input hidden="hidden" type="text" name="poslocation-csv-data" id="poslocation-csv-data" value="<?php echo(htmlspecialchars($arrayToJson))?>">
+          </div>
+          <div class="col-md-2"></div>
         </div>
+        <div class="row-fluid">
+          <div id="table-div" style="overflow-y: auto;overflow-x: hidden;height: 50vh">
+              <br/>
+              <br/>
+              <input type="text" id="myInput" onkeyup="searchFromTableRow()" placeholder="Search for agent name..." title="Type in a name">
+              <table id="myTable" class="table">
+                  <thead class="thead-dark">
+                      <tr>
+                          <th style="width:5%;">SL</th>
+                          <th style="width:20%;">Agent Name</th>
+                          <th style="width:20%;">Owner Name</th>
+                          <th style="width:30%;">Address</th>
+                          <th style="width:15%;">Service Provider</th>
+                          <th style="width:10%;">Contact</th>
+                      </tr>
+                  </thead>
+                  <?php
+                      for($i=0;$i<sizeof($newArray);$i++){
+                          echo "<tr id='row-".$newArray[$i]['S/l']."'>";
+                          echo "<td>".$newArray[$i]['S/l']."</td>";
+                          echo "<td>".$newArray[$i]['Agent Name']."</td>";
+                          echo "<td>".$newArray[$i]['Owner Name']."</td>";
+                          echo "<td>".$newArray[$i]['Address']."</td>";
+                          echo "<td>".$newArray[$i]['Service Provider']."</td>";
+                          echo "<td>".$newArray[$i]['Contact No.']."</td>";
+                          echo "</tr>";
+                      }
+                      ?>
+              </table>
+          </div>
+        </div>
+      </div>
+
+
+        
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
@@ -155,8 +168,7 @@
 
             var element = document.createElement('div');
 
-            element.innerHTML = 
-            '<img id="pointer-'+ pos['S/l'] +'" src="mappin2.png" width="30" height="30" onclick="gotoTableRow(' + pos['S/l'] + ')" onmouseover="tupleMouseOver(' + pos['S/l'] + ')" onmouseout="tupleMouseOut(' + pos['S/l'] + ')"/>';
+            element.innerHTML = '<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-geo-alt-fill" fill="red" xmlns="http://www.w3.org/2000/svg" onclick="gotoTableRow(' + pos['S/l'] + ')" onmouseover="tupleMouseOver(' + pos['S/l'] + ')" onmouseout="tupleMouseOut(' + pos['S/l'] + ')"><path fill-rule="evenodd" d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"></path></svg>';
 
             var markerCoordinates = ol.proj.fromLonLat([latlongmap['lng'], latlongmap['lat']]);
 
@@ -214,7 +226,7 @@
     function tupleMouseOver(tupleId) {
       $("#marker-span-"+ tupleId).css('position','absolute');
       $("#marker-span-"+ tupleId).css('left', mouseX);
-      $("#marker-span-"+ tupleId).css('top', mouseY);
+      $("#marker-span-"+ tupleId).css('top', mouseY - 10);
       $("#marker-span-"+ tupleId).tooltip('show');
     }
 
